@@ -1,6 +1,8 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type LeaderBoardRepository struct {
 	DB *sql.DB

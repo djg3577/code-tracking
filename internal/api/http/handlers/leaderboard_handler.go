@@ -27,7 +27,6 @@ var upgrader = websocket.Upgrader{
 
 func (h *LeaderboardHandler) HandleWebSocket(c *gin.Context) {
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-	log.Println("STARTING");
 	if err != nil {
 		log.Println("Failed to upgrade to WebSocket:", err)
 		return
@@ -48,6 +47,14 @@ func (h *LeaderboardHandler) HandleWebSocket(c *gin.Context) {
 		log.Printf("Received message: %v", msg)
 	}
 	log.Println("Client disconnected")
+}
+
+func (h *LeaderboardHandler) LeaderBoard(c *gin.Context) {
+	leaderboard, err := h.Service.GetTopScores()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error: ERROR IN GETTING LEADERBOARD SCORES": err.Error()})
+	}
+	c.JSON(http.StatusOK, leaderboard)
 }
 
 func (h *LeaderboardHandler) handleMessages() {
