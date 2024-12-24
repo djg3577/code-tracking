@@ -14,7 +14,7 @@ type UserScore struct {
 }
 
 func (r *LeaderBoardRepository) GetTopScores() ([]UserScore, error) {
-	rows, err := r.DB.Query("SELECT u.username as username , SUM(count) as score FROM Users as u JOIN activity_summary a ON a.user_id = u.id GROUP BY u.username")
+	rows, err := r.DB.Query("SELECT u.username as username , SUM(total_duration) as score FROM Users as u JOIN activity_summary a ON a.user_id = u.id GROUP BY u.username")
 	if err != nil {
 		return nil, err
 	}
