@@ -14,7 +14,6 @@ func InitWebLeaderboardRoutes(api *gin.RouterGroup, db *sql.DB) {
 	leaderboardHandler := &handlers.LeaderboardHandler{Service: leaderboardService}
 
 	api.GET("/leaderboard", leaderboardHandler.LeaderBoard)
-	api.GET("/ws", leaderboardHandler.HandleWebSocket)
 
 	leaderboardHandler.InitWebSocketHandler()
 }
