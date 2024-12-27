@@ -30,7 +30,7 @@ func (r *LeaderBoardRepository) GetTopScores(days string) ([]UserScore, error) {
 				WHERE activities.date >= CURRENT_DATE - INTERVAL '%d days'
 		`, daysInt)
 	}
-
+// testing push
 	query += `
 				GROUP BY username
 				ORDER BY total_score DESC
