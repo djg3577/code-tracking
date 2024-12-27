@@ -8,6 +8,6 @@ type LeaderboardService struct {
 	Repo *repository.LeaderBoardRepository
 }
 
-func (s *LeaderboardService) GetTopScores() ([]repository.UserScore, error) {
-	return s.Repo.GetTopScores()
+func (s *LeaderboardService) GetTopScores(days string) ([]repository.UserScore, error) {
+	return s.Repo.GetTopScores(days)
 }

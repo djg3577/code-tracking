@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+	"strconv"
 )
 
 type LeaderBoardRepository struct {
@@ -13,8 +15,27 @@ type UserScore struct {
 	Score    int    `json:"score"`
 }
 
-func (r *LeaderBoardRepository) GetTopScores() ([]UserScore, error) {
-	rows, err := r.DB.Query("SELECT u.username as username , SUM(total_duration) as score FROM Users as u JOIN activity_summary a ON a.user_id = u.id GROUP BY u.username")
+func (r *LeaderBoardRepository) GetTopScores(days string) ([]UserScore, error) {
+	query := `
+		SELECT username, SUM(total_duration) as total_score
+		FROM Users
+		JOIN activities ON activities.user_id = Users.id
+	`
+	if days != "" {
+		daysInt, err := strconv.Atoi(days)
+		if err != nil {
+			return nil, fmt.Errorf("invalid days parameter: %v", err)
+		}
+		query += fmt.Sprintf(`
+				WHERE activities.date >= CURRENT_DATE - INTERVAL '%d days'
+		`, daysInt)
+	}
+
+	query += `
+				GROUP BY username
+				ORDER BY total_score DESC
+	`
+	rows, err := r.DB.Query(query)
 	if err != nil {
 		return nil, err
 	}

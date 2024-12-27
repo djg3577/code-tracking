@@ -3,10 +3,11 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"time"
+	// "time"
 
 	"STRIVEBackend/internal/repository"
 	"STRIVEBackend/internal/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -50,7 +51,8 @@ func (h *LeaderboardHandler) HandleWebSocket(c *gin.Context) {
 }
 
 func (h *LeaderboardHandler) LeaderBoard(c *gin.Context) {
-	leaderboard, err := h.Service.GetTopScores()
+	days := c.Query("days")
+	leaderboard, err := h.Service.GetTopScores(days)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error: ERROR IN GETTING LEADERBOARD SCORES": err.Error()})
 	}
@@ -71,19 +73,19 @@ func (h *LeaderboardHandler) handleMessages() {
 	}
 }
 
-func (h *LeaderboardHandler) fetchAndBroadcastTopScores() {
-	for {
-		topScores, err := h.Service.GetTopScores()
-		if err != nil {
-			log.Printf("error fetching top scores: %v", err)
-			continue
-		}
-		broadcast <- topScores
-		time.Sleep(1 * time.Second)
-	}
-}
+// func (h *LeaderboardHandler) fetchAndBroadcastTopScores() {
+// 	for {
+// 		topScores, err := h.Service.GetTopScores(time)
+// 		if err != nil {
+// 			log.Printf("error fetching top scores: %v", err)
+// 			continue
+// 		}
+// 		broadcast <- topScores
+// 		time.Sleep(1 * time.Second)
+// 	}
+// }
 
 func (h *LeaderboardHandler) InitWebSocketHandler() {
 	go h.handleMessages()
-	go h.fetchAndBroadcastTopScores()
+	// go h.fetchAndBroadcastTopScores()
 }
