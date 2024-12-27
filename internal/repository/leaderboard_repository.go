@@ -21,7 +21,7 @@ func (r *LeaderBoardRepository) GetTopScores(days string) ([]UserScore, error) {
 		FROM Users
 		JOIN activities ON activities.user_id = Users.id
 	`
-	if days != "" {
+	if days != "" { 
 		daysInt, err := strconv.Atoi(days)
 		if err != nil {
 			return nil, fmt.Errorf("invalid days parameter: %v", err)
